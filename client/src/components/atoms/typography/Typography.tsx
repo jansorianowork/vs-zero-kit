@@ -23,7 +23,26 @@ type TypographyProps<T extends ElementType> = {
 
 const Typography = forwardRef<HTMLElement, TypographyProps<ElementType>>(
   ({ className, variant = "p", as, children, ...props }, ref) => {
-    const Component = as || variant || "p";
+    // Map variants to appropriate HTML elements if 'as' is not provided
+    const getElementFromVariant = (variant: TypographyVariant): ElementType => {
+      switch (variant) {
+        case "h1": return "h1";
+        case "h2": return "h2";
+        case "h3": return "h3";
+        case "h4": return "h4";
+        case "h5": return "h5";
+        case "h6": return "h6";
+        case "blockquote": return "blockquote";
+        case "code": return "code";
+        case "lead": return "p";
+        case "large": return "p";
+        case "small": return "p";
+        case "muted": return "p";
+        default: return "p";
+      }
+    };
+
+    const Component = as || getElementFromVariant(variant);
 
     const variantClassMap: Record<TypographyVariant, string> = {
       h1: "text-4xl font-extrabold tracking-tight lg:text-5xl",
