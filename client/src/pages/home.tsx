@@ -14,6 +14,34 @@ import { Badge } from "@/components/atoms/badge/Badge";
 import { Input } from "@/components/atoms/input/Input";
 import { Icon } from "@/components/atoms/icon/Icon";
 
+// Mock TabsComponent for the content sections
+const TabsComponent = ({ tabs, defaultValue }: { 
+  tabs: {value: string, label: string, content: React.ReactNode, disabled?: boolean}[],
+  defaultValue: string 
+}) => {
+  const [activeTab, setActiveTab] = useState(defaultValue);
+  
+  return (
+    <div>
+      <div className="flex border-b">
+        {tabs.map(tab => (
+          <button
+            key={tab.value}
+            className={`px-4 py-2 ${activeTab === tab.value ? 'border-b-2 border-primary font-medium' : 'text-muted-foreground'} ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+            onClick={() => !tab.disabled && setActiveTab(tab.value)}
+            disabled={tab.disabled}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4">
+        {tabs.find(tab => tab.value === activeTab)?.content}
+      </div>
+    </div>
+  );
+};
+
 export default function HomePage() {
   const isMobile = useMobile();
   const { theme, setTheme } = useTheme();
@@ -737,7 +765,7 @@ module.exports = {
                 <FormGroup
                   id="disabled-field"
                   label="Account ID"
-                  value="ACC-12345"
+                  defaultValue="ACC-12345"
                   disabled
                   helpText="Your account ID cannot be changed."
                 />
@@ -798,7 +826,640 @@ module.exports = {
             </div>
           </div>
         );
+        
+      case "navigation-item":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Navigation Item Component</Typography>
+              <Typography variant="lead">
+                Navigation items are used for building menus, sidebars, and navigation components.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Variants</Typography>
+              <div className="w-64 border rounded-md p-4 space-y-1 mb-4">
+                <NavigationItem icon={Home} isActive>Dashboard</NavigationItem>
+                <NavigationItem icon={Users}>Users</NavigationItem>
+                <NavigationItem icon={Package}>Products</NavigationItem>
+                <NavigationItem icon={FileText}>Reports</NavigationItem>
+                <div className="h-px bg-border my-2"></div>
+                <NavigationItem icon={Settings}>Settings</NavigationItem>
+              </div>
+              
+              <Typography variant="p" className="mb-6">
+                Navigation items can be used in sidebars, mobile menus, and other navigation components. They support icons, active states, and dividers.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Interactive Example</Typography>
+              <div className="w-64 border rounded-md p-4 space-y-1 mb-4">
+                <NavigationItem 
+                  icon={Home} 
+                  isActive={true}
+                  onClick={() => alert("Dashboard clicked")}
+                >
+                  Dashboard
+                </NavigationItem>
+                <NavigationItem 
+                  icon={Users}
+                  onClick={() => alert("Users clicked")}
+                >
+                  Users
+                </NavigationItem>
+                <NavigationItem 
+                  icon={Package}
+                  onClick={() => alert("Products clicked")}
+                >
+                  Products
+                </NavigationItem>
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { NavigationItem } from "@/components/molecules/navigation-item/NavigationItem";
+import { Home, Users, Settings } from "lucide-react";
+
+// Default navigation item
+<NavigationItem icon={Home}>
+  Dashboard
+</NavigationItem>
+
+// Active navigation item
+<NavigationItem icon={Users} isActive>
+  Users
+</NavigationItem>
+
+// With click handler
+<NavigationItem 
+  icon={Settings}
+  onClick={() => handleNavigation('settings')}
+>
+  Settings
+</NavigationItem>`}
+              </div>
+            </div>
+          </div>
+        );
+        
+      case "tabs":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Tabs Component</Typography>
+              <Typography variant="lead">
+                Tabs organize content into separate views where only one view is visible at a time.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Example</Typography>
+              <div className="border rounded-md p-4">
+                <TabsComponent
+                  tabs={[
+                    {
+                      value: "account",
+                      label: "Account",
+                      content: (
+                        <div className="p-4 border rounded-md mt-4">
+                          <Typography variant="h4" className="mb-2">Account Settings</Typography>
+                          <Typography variant="p">Manage your account settings and preferences.</Typography>
+                        </div>
+                      ),
+                    },
+                    {
+                      value: "security",
+                      label: "Security",
+                      content: (
+                        <div className="p-4 border rounded-md mt-4">
+                          <Typography variant="h4" className="mb-2">Security Settings</Typography>
+                          <Typography variant="p">Update your security settings and password.</Typography>
+                        </div>
+                      ),
+                    },
+                    {
+                      value: "disabled",
+                      label: "API",
+                      disabled: true,
+                      content: (
+                        <div className="p-4 border rounded-md mt-4">
+                          <Typography variant="h4" className="mb-2">API Settings</Typography>
+                          <Typography variant="p">This tab is disabled.</Typography>
+                        </div>
+                      ),
+                    },
+                  ]}
+                  defaultValue="account"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { TabsComponent } from "@/components/molecules/tabs/TabsComponent";
+
+// Basic tabs
+<TabsComponent
+  tabs={[
+    {
+      value: "tab1",
+      label: "Tab 1",
+      content: <div>Content for Tab 1</div>,
+    },
+    {
+      value: "tab2",
+      label: "Tab 2",
+      content: <div>Content for Tab 2</div>,
+    },
+    {
+      value: "tab3",
+      label: "Tab 3",
+      disabled: true,
+      content: <div>Content for Tab 3</div>,
+    },
+  ]}
+  defaultValue="tab1"
+/>`}
+              </div>
+            </div>
+          </div>
+        );
+        
+      case "icon":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Icon Component</Typography>
+              <Typography variant="lead">
+                The Icon component provides a consistent way to display icons across your application.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Examples</Typography>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8">
+                <div className="flex flex-col items-center">
+                  <Icon name={Home} />
+                  <span className="text-xs mt-1">Home</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Settings} />
+                  <span className="text-xs mt-1">Settings</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Users} />
+                  <span className="text-xs mt-1">Users</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={FileText} />
+                  <span className="text-xs mt-1">File</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Package} />
+                  <span className="text-xs mt-1">Package</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Globe} />
+                  <span className="text-xs mt-1">Globe</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Box} />
+                  <span className="text-xs mt-1">Box</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={LayoutGrid} />
+                  <span className="text-xs mt-1">Grid</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Sizes</Typography>
+              <div className="flex flex-wrap gap-8 mb-6">
+                <div className="flex flex-col items-center">
+                  <Icon name={Users} size="sm" />
+                  <span className="text-xs mt-1">Small</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Users} size="md" />
+                  <span className="text-xs mt-1">Medium</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Users} size="lg" />
+                  <span className="text-xs mt-1">Large</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Icon name={Users} size="xl" />
+                  <span className="text-xs mt-1">Extra Large</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { Icon } from "@/components/atoms/icon/Icon";
+import { Home, Settings, Users } from "lucide-react";
+
+// Default icon
+<Icon name={Home} />
+
+// Icon with custom size
+<Icon name={Settings} size="lg" />
+
+// Icon with custom className
+<Icon name={Users} className="text-primary" />`}
+              </div>
+            </div>
+          </div>
+        );
+        
+      case "typography":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Typography Component</Typography>
+              <Typography variant="lead">
+                The Typography component provides consistent text styling across your application.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Headings</Typography>
+              <div className="space-y-4">
+                <Typography variant="h1">Heading 1</Typography>
+                <Typography variant="h2">Heading 2</Typography>
+                <Typography variant="h3">Heading 3</Typography>
+                <Typography variant="h4">Heading 4</Typography>
+                <Typography variant="h5">Heading 5</Typography>
+                <Typography variant="h6">Heading 6</Typography>
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Text Styles</Typography>
+              <div className="space-y-6">
+                <div>
+                  <Typography variant="p" className="mb-2">
+                    This is a paragraph. It can be used for standard text content. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: p
+                  </Typography>
+                </div>
+                
+                <div>
+                  <Typography variant="lead" className="mb-2">
+                    This is a lead paragraph. It stands out from regular text and is often used for introductions or important information.
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: lead
+                  </Typography>
+                </div>
+                
+                <div>
+                  <Typography variant="large" className="mb-2">
+                    This is large text. It's bigger than regular paragraph text but not as prominent as headings.
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: large
+                  </Typography>
+                </div>
+                
+                <div>
+                  <Typography variant="small" className="mb-2">
+                    This is small text. It's used for less important information or metadata.
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: small
+                  </Typography>
+                </div>
+                
+                <div>
+                  <Typography variant="muted" className="mb-2">
+                    This is muted text. It has reduced emphasis and is often used for secondary information.
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: muted
+                  </Typography>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Special Formats</Typography>
+              <div className="space-y-6">
+                <div>
+                  <Typography variant="blockquote" className="mb-2">
+                    This is a blockquote. It's used to highlight quotes or important passages.
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: blockquote
+                  </Typography>
+                </div>
+                
+                <div>
+                  <Typography variant="code" className="mb-2">
+                    const code = "This is code formatting";
+                  </Typography>
+                  <Typography variant="small" className="text-muted-foreground">
+                    Paragraph variant: code
+                  </Typography>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { Typography } from "@/components/atoms/typography/Typography";
+
+// Basic usage with different variants
+<Typography variant="h1">Heading 1</Typography>
+<Typography variant="h2">Heading 2</Typography>
+<Typography variant="p">Normal paragraph text</Typography>
+<Typography variant="lead">Lead paragraph</Typography>
+<Typography variant="small">Small text</Typography>
+<Typography variant="muted">Muted text</Typography>
+<Typography variant="blockquote">Blockquote text</Typography>
+<Typography variant="code">Code formatting</Typography>
+
+// With custom element
+<Typography variant="h1" as="div">
+  This is a div with h1 styling
+</Typography>`}
+              </div>
+            </div>
+          </div>
+        );
       
+      case "alert-dialog":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Alert Dialog Component</Typography>
+              <Typography variant="lead">
+                Alert Dialogs are used to get the user's confirmation for a destructive action or important decision.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Example</Typography>
+              <div className="flex justify-center mb-8">
+                <Button onClick={() => alert("This would open an alert dialog")}>
+                  Open Alert Dialog
+                </Button>
+              </div>
+              
+              <Typography variant="p" className="mb-4">
+                Alert dialogs interrupt the user flow with a focused message and action. 
+                They are typically used for critical actions that require explicit confirmation, 
+                such as deleting data or disconnecting an account.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { Button } from "@/components/atoms/button/Button";
+
+function DeleteUserDialog() {
+  return (
+    <>
+      <Button onClick={() => setShowDialog(true)}>
+        Delete Account
+      </Button>
+
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Delete Account
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}`}
+              </div>
+            </div>
+          </div>
+        );
+        
+      case "dropdown-menu":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Dropdown Menu Component</Typography>
+              <Typography variant="lead">
+                Dropdown menus display a list of actions or options that users can choose from.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Example</Typography>
+              <div className="flex justify-center mb-8">
+                <Button onClick={() => alert("This would open a dropdown menu")}>
+                  Open Menu
+                </Button>
+              </div>
+              
+              <Typography variant="p" className="mb-4">
+                Dropdown menus appear when users click on a button or trigger element. 
+                They provide a list of options or actions that the user can select from.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { Button } from "@/components/atoms/button/Button";
+
+function UserActionsMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost">
+          <MoreVertical className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem onClick={() => handleEdit()}>
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleViewProfile()}>
+          View Profile
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => handleDelete()} className="text-destructive">
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}`}
+              </div>
+            </div>
+          </div>
+        );
+      
+      case "modal":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Modal Component</Typography>
+              <Typography variant="lead">
+                Modals display content that temporarily blocks interactions with the main view.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Example</Typography>
+              <div className="flex justify-center mb-8">
+                <Button onClick={() => alert("This would open a modal")}>
+                  Open Modal
+                </Button>
+              </div>
+              
+              <Typography variant="p" className="mb-4">
+                Modals appear on top of the main content and disable interaction with the rest 
+                of the page until they are closed. They are commonly used for focusing user 
+                attention on important content, forms, or actions.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { Button } from "@/components/atoms/button/Button";
+
+function CreateUserModal() {
+  const [open, setOpen] = useState(false);
+  
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>
+        Create User
+      </Button>
+      
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create New User</DialogTitle>
+            <DialogDescription>
+              Fill out the form below to create a new user account.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <form onSubmit={handleSubmit}>
+              {/* Form fields go here */}
+            </form>
+          </div>
+          
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" onClick={handleCreate}>
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}`}
+              </div>
+            </div>
+          </div>
+        );
+        
+      case "toast":
+        return (
+          <div className="space-y-8">
+            <div>
+              <Typography variant="h1" className="mb-2">Toast Component</Typography>
+              <Typography variant="lead">
+                Toasts provide brief notifications or feedback messages to users.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Example</Typography>
+              <div className="flex flex-wrap gap-4 justify-center mb-8">
+                <Button onClick={() => alert("Success toast would appear")}>
+                  Show Success Toast
+                </Button>
+                <Button variant="outline" onClick={() => alert("Error toast would appear")}>
+                  Show Error Toast
+                </Button>
+              </div>
+              
+              <Typography variant="p" className="mb-4">
+                Toasts appear temporarily and automatically disappear after a few seconds. 
+                They are used to provide feedback about operations without interrupting the 
+                user's workflow.
+              </Typography>
+            </div>
+            
+            <div>
+              <Typography variant="h2" className="mb-4">Usage</Typography>
+              <div className="bg-secondary/30 p-4 rounded-md font-mono text-sm">
+{`import { Button } from "@/components/atoms/button/Button";
+import { useToast } from "@/hooks/use-toast";
+
+function ToastExample() {
+  const { toast } = useToast();
+  
+  const showSuccessToast = () => {
+    toast({
+      title: "Success!",
+      description: "Your changes have been saved.",
+      variant: "default",
+    });
+  };
+  
+  const showErrorToast = () => {
+    toast({
+      title: "Error!",
+      description: "Something went wrong. Please try again.",
+      variant: "destructive",
+    });
+  };
+  
+  return (
+    <div className="flex space-x-4">
+      <Button onClick={showSuccessToast}>
+        Show Success Toast
+      </Button>
+      <Button variant="outline" onClick={showErrorToast}>
+        Show Error Toast
+      </Button>
+    </div>
+  );
+}`}
+              </div>
+            </div>
+          </div>
+        );
+        
       default:
         return (
           <div className="space-y-8">
