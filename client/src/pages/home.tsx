@@ -7,6 +7,7 @@ import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/atoms/button/Button";
 import { Card } from "@/components/molecules/card/Card";
 import { Typography } from "@/components/atoms/typography/Typography";
+import { Link } from "wouter";
 
 export default function HomePage() {
   const isMobile = useMobile();
@@ -195,6 +196,13 @@ export default function HomePage() {
               <Typography variant="lead">
                 vs-zero-kit is a starter kit for building component libraries with Storybook, Vite, TypeScript and shadcn UI. This guide will walk you through the basics of getting started.
               </Typography>
+              <div className="mt-4">
+                <Link href="/components">
+                  <Button variant="primary">
+                    View Component Showcase
+                  </Button>
+                </Link>
+              </div>
             </div>
             
             <div className="space-y-10">

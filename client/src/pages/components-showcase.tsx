@@ -10,9 +10,10 @@ import { useMobile } from "@/hooks/use-mobile";
 import { Sidebar } from "@/components/layouts/sidebar/Sidebar";
 import { MobileNavbar } from "@/components/layouts/mobile-navbar/MobileNavbar";
 import { NavigationItem } from "@/components/molecules/navigation-item/NavigationItem";
+import { Link } from "wouter";
 import { 
   Home, FileText, Settings, Users, Package, LayoutGrid, Box, 
-  PenTool, Palette, Layers, Eye, Search, Bell, ChevronRight 
+  PenTool, Palette, Layers, Eye, Search, Bell, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { useState } from "react";
@@ -102,6 +103,18 @@ export default function ComponentsShowcase() {
   // Navigation content for mobile navbar
   const navContent = (
     <div className="p-4 space-y-6">
+      <div>
+        <div className="mb-2 px-2">
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Navigation</h3>
+        </div>
+        <div className="space-y-1">
+          <Link href="/">
+            <NavigationItem icon={Home}>
+              Back to Home
+            </NavigationItem>
+          </Link>
+        </div>
+      </div>
       {navSections.map((section, index) => (
         <div key={index}>
           <div className="mb-2 px-2">
@@ -519,7 +532,14 @@ export default function ComponentsShowcase() {
         {/* Main toolbar (desktop) */}
         <header className="hidden md:flex sticky top-0 bg-background z-10 border-b h-14 items-center px-6">
           <div className="w-full flex items-center justify-between">
-            <div className="flex-1 flex items-center">
+            <div className="flex-1 flex items-center space-x-3">
+              <Link href="/">
+                <Button variant="ghost" className="h-8 px-2 text-sm flex items-center" title="Back to Home">
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <span>Back to Home</span>
+                </Button>
+              </Link>
+              <div className="h-6 w-px bg-border mx-1"></div>
               <Button variant="outline" className="h-8 px-2 text-sm">
                 <Search className="h-4 w-4 mr-1.5" />
                 <span className="text-muted-foreground">Search components...</span>
