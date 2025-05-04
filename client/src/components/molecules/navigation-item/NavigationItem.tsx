@@ -7,6 +7,7 @@ export interface NavigationItemProps extends ButtonHTMLAttributes<HTMLButtonElem
   icon?: LucideIcon;
   isActive?: boolean;
   hasDivider?: boolean;
+  onClick?: () => void;
 }
 
 const NavigationItem = forwardRef<HTMLButtonElement, NavigationItemProps>(

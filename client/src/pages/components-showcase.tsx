@@ -122,13 +122,11 @@ export default function ComponentsShowcase() {
           </div>
           <div className="space-y-1">
             {section.items.map((item, itemIndex) => {
-              // Ensure all optional properties are handled
               return (
                 <NavigationItem 
                   key={itemIndex} 
                   icon={item.icon} 
-                  isActive={item.isActive || false}
-                  hasDivider={item.hasDivider || false}
+                  isActive={!!item.isActive}
                   onClick={item.onClick}
                 >
                   {item.label}
@@ -361,7 +359,8 @@ export default function ComponentsShowcase() {
               <NavigationItem icon={Users}>Users</NavigationItem>
               <NavigationItem icon={Package}>Products</NavigationItem>
               <NavigationItem icon={FileText}>Reports</NavigationItem>
-              <NavigationItem icon={Settings} hasDivider>Settings</NavigationItem>
+              <div className="h-px bg-border my-2"></div>
+              <NavigationItem icon={Settings}>Settings</NavigationItem>
             </div>
           </section>
           
