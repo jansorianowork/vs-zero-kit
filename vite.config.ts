@@ -2,30 +2,34 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-export default defineConfig({
-   base: '/vs-zero-kit/',
-  plugins: [
+// Vite config with plugins and paths
+export default defineConfig(async () => {
+  const plugins = [
     react(),
+    // Dynamically import the Cartographer plugin only in the right conditions
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
+          (await import("@replit/vite-plugin-cartographer")).cartographer(),
         ]
       : []),
-  ],
-  resolve: {
-    alias: {
-      "@db": path.resolve(import.meta.dirname, "db"),
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+  ];
+
+  return {
+    base: '/vs-zero-kit/', // Ensure base path for GitHub Pages
+    plugins,
+    resolve: {
+      alias: {
+        "@db": path.resolve(__dirname, "db"),
+        "@": path.resolve(__dirname, "client", "src"),
+        "@shared": path.resolve(__dirname, "shared"),
+        "@assets": path.resolve(__dirname, "attached_assets"),
+      },
     },
-  },
-  root: path.resolve(import.meta.dirname, "client"),
-  build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
-    emptyOutDir: true,
-  },
+    root: path.resolve(__dirname, "client"), // Ensure 'client' is your working directory
+    build: {
+      outDir: path.resolve(__dirname, "dist/public"), // Output folder for GitHub Pages
+      emptyOutDir: true,
+    },
+  };
 });
